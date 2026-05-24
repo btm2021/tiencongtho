@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="vi">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Tính tiền công thợ</title>
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <main class="app">
+      <section class="topbar">
+        <div>
+          <p class="label">Sổ công thợ</p>
+          <h1>Tính tiền công</h1>
+        </div>
+        <div class="date-field">
+          <label for="workDate">Ngày</label>
+          <input id="workDate" type="date" />
+        </div>
+      </section>
+
+      <section class="summary" aria-live="polite">
+        <div>
+          <span>Tổng tiền</span>
+          <strong id="grandTotal">0đ</strong>
+        </div>
+        <div>
+          <span>Thợ chính</span>
+          <strong id="mainTotal">0đ</strong>
+        </div>
+        <div>
+          <span>Thợ phụ</span>
+          <strong id="helperTotal">0đ</strong>
+        </div>
+      </section>
+
+      <section class="entry-panel" aria-labelledby="entryTitle">
+        <div class="section-heading">
+          <h2 id="entryTitle">Thêm thợ</h2>
+          <button id="clearDayBtn" type="button" class="ghost-button">Xóa ngày này</button>
+        </div>
+
+        <form id="workerForm" class="worker-form">
+          <label>
+            Tên thợ
+            <input id="workerName" type="text" placeholder="Ví dụ: Anh Nam" autocomplete="off" required />
+          </label>
+
+          <label>
+            Loại thợ
+            <select id="workerType">
+              <option value="main">Thợ chính - 420k/ngày</option>
+              <option value="helper">Thợ phụ - 340k/ngày</option>
+            </select>
+          </label>
+
+          <fieldset class="sessions">
+            <legend>Buổi làm</legend>
+            <label>
+              <input id="morning" type="checkbox" checked />
+              Sáng
+            </label>
+            <label>
+              <input id="afternoon" type="checkbox" checked />
+              Chiều
+            </label>
+          </fieldset>
+
+          <button type="submit" class="primary-button">Thêm vào ngày</button>
+        </form>
+      </section>
+
+      <section class="list-panel" aria-labelledby="listTitle">
+        <div class="section-heading">
+          <h2 id="listTitle">Danh sách trong ngày</h2>
+          <span id="workerCount" class="count">0 thợ</span>
+        </div>
+        <div id="workerList" class="worker-list"></div>
+        <p id="emptyState" class="empty-state">Chưa có công thợ cho ngày này.</p>
+      </section>
+    </main>
+
+    <script src="app.js"></script>
+  </body>
+</html>
