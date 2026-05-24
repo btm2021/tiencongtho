@@ -19,6 +19,10 @@ const morningMain = document.querySelector("#morningMain");
 const morningHelper = document.querySelector("#morningHelper");
 const afternoonMain = document.querySelector("#afternoonMain");
 const afternoonHelper = document.querySelector("#afternoonHelper");
+const appSidebar = document.querySelector("#appSidebar");
+const sidebarBackdrop = document.querySelector("#sidebarBackdrop");
+const openSidebarBtn = document.querySelector("#openSidebarBtn");
+const closeSidebarBtn = document.querySelector("#closeSidebarBtn");
 
 let store = loadStore();
 let selectedDate = "";
@@ -306,6 +310,29 @@ clearMonthBtn.addEventListener("click", () => {
   saveStore();
   render();
   fillQuickEntryFromDate();
+  closeSidebar();
+});
+
+function openSidebar() {
+  appSidebar.classList.add("is-open");
+  appSidebar.setAttribute("aria-hidden", "false");
+  sidebarBackdrop.hidden = false;
+}
+
+function closeSidebar() {
+  appSidebar.classList.remove("is-open");
+  appSidebar.setAttribute("aria-hidden", "true");
+  sidebarBackdrop.hidden = true;
+}
+
+openSidebarBtn.addEventListener("click", openSidebar);
+closeSidebarBtn.addEventListener("click", closeSidebar);
+sidebarBackdrop.addEventListener("click", closeSidebar);
+
+document.addEventListener("keydown", (event) => {
+  if (event.key === "Escape" && appSidebar.classList.contains("is-open")) {
+    closeSidebar();
+  }
 });
 
 monthInput.value = currentMonthString();
