@@ -239,7 +239,6 @@ sheetBody.addEventListener("input", (event) => {
   );
   if (updatedInput) {
     updatedInput.focus();
-    updatedInput.setSelectionRange(updatedInput.value.length, updatedInput.value.length);
   }
 
   if (entryDate.value === date) {
