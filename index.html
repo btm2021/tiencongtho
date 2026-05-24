@@ -3,26 +3,33 @@
   <head>
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tính tiền công thợ</title>
+    <title>Bảng công thợ</title>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.css" />
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jspreadsheet.min.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
     <main class="app">
-      <section class="topbar">
+      <header class="topbar">
         <div>
           <p class="label">Sổ công thợ</p>
-          <h1>Tính tiền công</h1>
+          <h1>Bảng công theo ngày</h1>
         </div>
-        <div class="date-field">
-          <label for="workDate">Ngày</label>
-          <input id="workDate" type="date" />
-        </div>
-      </section>
+
+        <label class="month-field" for="workMonth">
+          Tháng
+          <input id="workMonth" type="month" />
+        </label>
+      </header>
 
       <section class="summary" aria-live="polite">
-        <div>
+        <div class="summary-primary">
           <span>Tổng tiền</span>
           <strong id="grandTotal">0đ</strong>
+        </div>
+        <div>
+          <span>Tổng công</span>
+          <strong id="workTotal">0</strong>
         </div>
         <div>
           <span>Thợ chính</span>
@@ -34,52 +41,47 @@
         </div>
       </section>
 
-      <section class="entry-panel" aria-labelledby="entryTitle">
-        <div class="section-heading">
-          <h2 id="entryTitle">Thêm thợ</h2>
-          <button id="clearDayBtn" type="button" class="ghost-button">Xóa ngày này</button>
+      <section class="sheet-panel" aria-labelledby="sheetTitle">
+        <div class="sheet-heading">
+          <div>
+            <h2 id="sheetTitle">Nhập số thợ từng buổi</h2>
+            <span>1 buổi = 0,5 công</span>
+          </div>
+          <button id="clearMonthBtn" type="button" class="ghost-button">Xóa tháng này</button>
         </div>
 
-        <form id="workerForm" class="worker-form">
+        <form id="quickEntryForm" class="quick-entry">
           <label>
-            Tên thợ
-            <input id="workerName" type="text" placeholder="Ví dụ: Anh Nam" autocomplete="off" required />
+            Ngày
+            <input id="entryDate" type="date" required />
           </label>
-
           <label>
-            Loại thợ
-            <select id="workerType">
-              <option value="main">Thợ chính - 420k/ngày</option>
-              <option value="helper">Thợ phụ - 340k/ngày</option>
-            </select>
+            Sáng - thợ chính
+            <input id="morningMain" type="number" min="0" step="1" inputmode="numeric" />
           </label>
-
-          <fieldset class="sessions">
-            <legend>Buổi làm</legend>
-            <label>
-              <input id="morning" type="checkbox" checked />
-              Sáng
-            </label>
-            <label>
-              <input id="afternoon" type="checkbox" checked />
-              Chiều
-            </label>
-          </fieldset>
-
-          <button type="submit" class="primary-button">Thêm vào ngày</button>
+          <label>
+            Sáng - thợ phụ
+            <input id="morningHelper" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label>
+            Chiều - thợ chính
+            <input id="afternoonMain" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+          <label>
+            Chiều - thợ phụ
+            <input id="afternoonHelper" type="number" min="0" step="1" inputmode="numeric" />
+          </label>
+          <button class="primary-button" type="submit">Cập nhật</button>
         </form>
-      </section>
 
-      <section class="list-panel" aria-labelledby="listTitle">
-        <div class="section-heading">
-          <h2 id="listTitle">Danh sách trong ngày</h2>
-          <span id="workerCount" class="count">0 thợ</span>
+        <div class="sheet-scroll">
+          <div id="spreadsheet" aria-describedby="sheetTitle"></div>
         </div>
-        <div id="workerList" class="worker-list"></div>
-        <p id="emptyState" class="empty-state">Chưa có công thợ cho ngày này.</p>
       </section>
     </main>
 
+    <script src="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/index.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>
