@@ -20,25 +20,6 @@
         </label>
       </header>
 
-      <section class="summary" aria-live="polite">
-        <div class="summary-primary">
-          <span>Tổng tiền</span>
-          <strong id="grandTotal">0đ</strong>
-        </div>
-        <div>
-          <span>Tổng công</span>
-          <strong id="workTotal">0</strong>
-        </div>
-        <div>
-          <span>Thợ chính</span>
-          <strong id="mainTotal">0đ</strong>
-        </div>
-        <div>
-          <span>Thợ phụ</span>
-          <strong id="helperTotal">0đ</strong>
-        </div>
-      </section>
-
       <section class="sheet-panel" aria-labelledby="sheetTitle">
         <div class="sheet-heading">
           <div>
@@ -53,22 +34,31 @@
             Ngày
             <input id="entryDate" type="date" required />
           </label>
-          <label>
-            Sáng - thợ chính
-            <input id="morningMain" type="number" min="0" step="1" inputmode="numeric" />
-          </label>
-          <label>
-            Sáng - thợ phụ
-            <input id="morningHelper" type="number" min="0" step="1" inputmode="numeric" />
-          </label>
-          <label>
-            Chiều - thợ chính
-            <input id="afternoonMain" type="number" min="0" step="1" inputmode="numeric" />
-          </label>
-          <label>
-            Chiều - thợ phụ
-            <input id="afternoonHelper" type="number" min="0" step="1" inputmode="numeric" />
-          </label>
+
+          <fieldset>
+            <legend>Sáng</legend>
+            <label>
+              Thợ chính
+              <input id="morningMain" type="number" min="0" step="1" inputmode="numeric" />
+            </label>
+            <label>
+              Thợ phụ
+              <input id="morningHelper" type="number" min="0" step="1" inputmode="numeric" />
+            </label>
+          </fieldset>
+
+          <fieldset>
+            <legend>Chiều</legend>
+            <label>
+              Thợ chính
+              <input id="afternoonMain" type="number" min="0" step="1" inputmode="numeric" />
+            </label>
+            <label>
+              Thợ phụ
+              <input id="afternoonHelper" type="number" min="0" step="1" inputmode="numeric" />
+            </label>
+          </fieldset>
+
           <button class="primary-button" type="submit">Cập nhật</button>
         </form>
 
@@ -93,6 +83,25 @@
             <tbody id="sheetBody"></tbody>
             <tfoot id="sheetFoot"></tfoot>
           </table>
+        </div>
+      </section>
+
+      <section class="status-bar" aria-live="polite">
+        <div>
+          <span>Tổng tiền</span>
+          <strong id="grandTotal">0đ</strong>
+        </div>
+        <div>
+          <span>Tổng công</span>
+          <strong id="workTotal">0</strong>
+        </div>
+        <div>
+          <span>Thợ chính</span>
+          <strong id="mainTotal">0đ</strong>
+        </div>
+        <div>
+          <span>Thợ phụ</span>
+          <strong id="helperTotal">0đ</strong>
         </div>
       </section>
     </main>

@@ -15,7 +15,8 @@
 
 body {
   margin: 0;
-  min-height: 100vh;
+  height: 100vh;
+  overflow: hidden;
   background: var(--bg);
   color: var(--text);
   font-family: Arial, Helvetica, sans-serif;
@@ -29,7 +30,7 @@ input {
 .app {
   display: flex;
   width: 100%;
-  min-height: 100vh;
+  height: 100vh;
   flex-direction: column;
   margin: 0 auto;
   padding: 12px;
@@ -102,44 +103,10 @@ input:focus {
   cursor: pointer;
 }
 
-.summary {
-  display: grid;
-  grid-template-columns: 1.4fr repeat(3, 1fr);
-  gap: 8px;
-  margin-bottom: 8px;
-}
-
-.summary > div,
 .sheet-panel {
   border: 1px solid var(--border);
   border-radius: 6px;
   background: var(--surface);
-}
-
-.summary > div {
-  padding: 9px 12px;
-}
-
-.summary span {
-  display: block;
-  color: var(--muted);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.summary strong {
-  display: block;
-  margin-top: 4px;
-  font-size: 18px;
-}
-
-.summary-primary {
-  background: #eef5ff;
-}
-
-.summary-primary strong {
-  color: #174ea6;
-  font-size: 22px;
 }
 
 .sheet-panel {
@@ -179,12 +146,29 @@ input:focus {
 
 .quick-entry {
   display: grid;
-  grid-template-columns: 150px repeat(4, minmax(120px, 1fr)) auto;
+  grid-template-columns: 150px repeat(2, minmax(220px, 1fr)) auto;
   gap: 8px;
   align-items: end;
-  padding: 10px 12px;
+  padding: 8px 12px;
   border-bottom: 1px solid var(--border);
   background: #fbfcfd;
+}
+
+.quick-entry fieldset {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 8px;
+  margin: 0;
+  border: 1px solid var(--border);
+  border-radius: 4px;
+  padding: 7px 8px 8px;
+}
+
+.quick-entry legend {
+  padding: 0 4px;
+  color: var(--text);
+  font-size: 12px;
+  font-weight: 800;
 }
 
 .quick-entry label {
@@ -196,7 +180,7 @@ input:focus {
 }
 
 .quick-entry input {
-  min-height: 34px;
+  min-height: 32px;
   background: #fff;
 }
 
@@ -298,6 +282,11 @@ thead .date-col {
   background: #f6f9ff;
 }
 
+.timesheet tbody tr.selected-row td,
+.timesheet tbody tr.selected-row th {
+  background: #eaf2ff;
+}
+
 .timesheet tfoot th,
 .timesheet tfoot td {
   position: sticky;
@@ -305,6 +294,43 @@ thead .date-col {
   z-index: 2;
   background: #f8fafc;
   font-weight: 800;
+}
+
+.status-bar {
+  display: grid;
+  grid-template-columns: 1.5fr repeat(3, 1fr);
+  gap: 1px;
+  margin-top: 8px;
+  overflow: hidden;
+  border: 1px solid var(--border);
+  border-radius: 6px;
+  background: var(--border);
+}
+
+.status-bar > div {
+  display: flex;
+  min-height: 34px;
+  align-items: center;
+  justify-content: space-between;
+  gap: 8px;
+  background: #fff;
+  padding: 6px 10px;
+}
+
+.status-bar span {
+  color: var(--muted);
+  font-size: 12px;
+  font-weight: 700;
+}
+
+.status-bar strong {
+  color: var(--text);
+  font-size: 14px;
+}
+
+.status-bar > div:first-child strong {
+  color: #174ea6;
+  font-size: 16px;
 }
 
 @media (max-width: 720px) {
@@ -322,16 +348,21 @@ thead .date-col {
     width: 100%;
   }
 
-  .summary {
-    grid-template-columns: 1fr 1fr;
-  }
-
   .quick-entry {
     grid-template-columns: 1fr 1fr;
   }
 
+  .quick-entry fieldset,
+  .quick-entry > label {
+    grid-column: 1 / -1;
+  }
+
   .quick-entry .primary-button {
     grid-column: 1 / -1;
+  }
+
+  .status-bar {
+    grid-template-columns: 1fr 1fr;
   }
 }
 
@@ -340,11 +371,15 @@ thead .date-col {
     font-size: 26px;
   }
 
-  .summary {
+  .quick-entry {
     grid-template-columns: 1fr;
   }
 
-  .quick-entry {
+  .quick-entry fieldset {
+    grid-template-columns: 1fr;
+  }
+
+  .status-bar {
     grid-template-columns: 1fr;
   }
 }

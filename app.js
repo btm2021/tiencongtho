@@ -21,6 +21,7 @@ const afternoonMain = document.querySelector("#afternoonMain");
 const afternoonHelper = document.querySelector("#afternoonHelper");
 
 let store = loadStore();
+let selectedDate = "";
 
 function todayString() {
   const now = new Date();
@@ -154,9 +155,10 @@ function render() {
 
 function renderDayRow(day) {
   const total = calculateDay(day.date);
+  const selectedClass = day.date === selectedDate ? " selected-row" : "";
 
   return `
-    <tr>
+    <tr class="${selectedClass}" data-row-date="${day.date}">
       <th class="date-col" scope="row">${day.day}/${day.month} - ${day.weekday}</th>
       ${renderCountCell(day.date, "morning", "main")}
       ${renderCountCell(day.date, "morning", "helper")}
@@ -200,11 +202,13 @@ function renderFooter(totals) {
 }
 
 function fillQuickEntryFromDate() {
+  selectedDate = entryDate.value;
   const day = getDayValue(entryDate.value);
   morningMain.value = day.morning.main || "";
   morningHelper.value = day.morning.helper || "";
   afternoonMain.value = day.afternoon.main || "";
   afternoonHelper.value = day.afternoon.helper || "";
+  render();
 }
 
 sheetBody.addEventListener("input", (event) => {
@@ -246,6 +250,22 @@ sheetBody.addEventListener("input", (event) => {
   }
 });
 
+sheetBody.addEventListener("click", (event) => {
+  if (event.target.closest("input")) return;
+
+  const row = event.target.closest("[data-row-date]");
+  if (!row) return;
+
+  selectedDate = row.dataset.rowDate;
+  entryDate.value = selectedDate;
+  const day = getDayValue(selectedDate);
+  morningMain.value = day.morning.main || "";
+  morningHelper.value = day.morning.helper || "";
+  afternoonMain.value = day.afternoon.main || "";
+  afternoonHelper.value = day.afternoon.helper || "";
+  render();
+});
+
 monthInput.addEventListener("change", render);
 entryDate.addEventListener("change", fillQuickEntryFromDate);
 
@@ -254,6 +274,7 @@ quickEntryForm.addEventListener("submit", (event) => {
 
   const selectedDate = entryDate.value;
   if (!selectedDate) return;
+  if (!confirm(`Cập nhật công cho ngày ${formatDateForConfirm(selectedDate)}?`)) return;
 
   setDayValue(selectedDate, {
     morning: {
@@ -289,5 +310,10 @@ clearMonthBtn.addEventListener("click", () => {
 
 monthInput.value = currentMonthString();
 entryDate.value = todayString();
+selectedDate = entryDate.value;
 fillQuickEntryFromDate();
-render();
+
+function formatDateForConfirm(date) {
+  const [, month, day] = date.split("-").map(Number);
+  return `${day}/${month}`;
+}
