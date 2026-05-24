@@ -4,8 +4,6 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>Bảng công thợ</title>
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.css" />
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/jspreadsheet.min.css" />
     <link rel="stylesheet" href="styles.css" />
   </head>
   <body>
@@ -75,13 +73,30 @@
         </form>
 
         <div class="sheet-scroll">
-          <div id="spreadsheet" aria-describedby="sheetTitle"></div>
+          <table class="timesheet" aria-describedby="sheetTitle">
+            <thead>
+              <tr>
+                <th rowspan="2" class="date-col">Ngày</th>
+                <th colspan="2">Buổi sáng</th>
+                <th colspan="2">Buổi chiều</th>
+                <th colspan="2">Tự tính</th>
+              </tr>
+              <tr>
+                <th>Thợ chính</th>
+                <th>Thợ phụ</th>
+                <th>Thợ chính</th>
+                <th>Thợ phụ</th>
+                <th>Tổng công</th>
+                <th>Thành tiền</th>
+              </tr>
+            </thead>
+            <tbody id="sheetBody"></tbody>
+            <tfoot id="sheetFoot"></tfoot>
+          </table>
         </div>
       </section>
     </main>
 
-    <script src="https://cdn.jsdelivr.net/npm/jsuites/dist/jsuites.min.js"></script>
-    <script src="https://cdn.jsdelivr.net/npm/jspreadsheet-ce@4/dist/index.min.js"></script>
     <script src="app.js"></script>
   </body>
 </html>

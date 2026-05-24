@@ -204,58 +204,106 @@ input:focus {
   width: 100%;
   min-height: 0;
   flex: 1;
-  overflow: hidden;
+  overflow: auto;
   background: #fff;
 }
 
-#spreadsheet {
-  min-height: 100%;
-}
-
-#spreadsheet .jexcel {
-  border: 0;
+.timesheet {
+  width: 100%;
+  min-width: 760px;
+  border-collapse: separate;
+  border-spacing: 0;
   font-size: 13px;
 }
 
-#spreadsheet .jexcel > thead > tr > td,
-#spreadsheet .jexcel > thead > tr > th {
+.timesheet th,
+.timesheet td {
+  height: 34px;
+  border-right: 1px solid var(--border);
+  border-bottom: 1px solid var(--border);
+  padding: 0;
+  text-align: center;
+}
+
+.timesheet th {
   background: var(--header);
   color: var(--text);
   font-weight: 800;
 }
 
-#spreadsheet .jexcel > tbody > tr > td {
-  height: 31px;
-  color: var(--text);
+.timesheet thead th {
+  position: sticky;
+  top: 0;
+  z-index: 3;
+  height: 34px;
 }
 
-#spreadsheet .jexcel > tbody > tr > td:first-child,
-#spreadsheet .jexcel > thead > tr > td:first-child {
+.timesheet thead tr:nth-child(2) th {
+  top: 34px;
+}
+
+.date-col {
+  position: sticky;
+  left: 0;
+  z-index: 2;
+  width: 130px;
+  min-width: 130px;
   background: #f8fafc;
-}
-
-#spreadsheet .jexcel > tbody > tr > td:nth-child(2) {
-  font-weight: 700;
+  padding: 0 10px;
   text-align: left;
 }
 
-#spreadsheet .jexcel > tbody > tr > td:nth-child(7),
-#spreadsheet .jexcel > tbody > tr > td:nth-child(8) {
+thead .date-col {
+  z-index: 4;
+}
+
+.input-cell {
+  width: 110px;
+  min-width: 110px;
+}
+
+.sheet-input {
+  width: 100%;
+  min-height: 33px;
+  border: 0;
+  border-radius: 0;
+  background: #fff;
+  padding: 0 8px;
+  text-align: center;
+}
+
+.sheet-input:focus {
+  box-shadow: inset 0 0 0 2px var(--accent);
+}
+
+.total-col {
+  width: 100px;
+  min-width: 100px;
   background: #fbfcfd;
-  color: #174ea6;
   font-weight: 800;
 }
 
-#spreadsheet .jexcel_content {
-  border: 0;
+.money-col {
+  width: 140px;
+  min-width: 140px;
+  background: #fbfcfd;
+  color: #174ea6;
+  font-weight: 800;
+  text-align: right;
+  padding: 0 10px;
 }
 
-#spreadsheet .jexcel_toolbar {
-  border-bottom: 1px solid var(--border);
+.timesheet tbody tr:hover td,
+.timesheet tbody tr:hover th {
+  background: #f6f9ff;
 }
 
-#spreadsheet .jexcel_nested {
-  background: #e7edf5;
+.timesheet tfoot th,
+.timesheet tfoot td {
+  position: sticky;
+  bottom: 0;
+  z-index: 2;
+  background: #f8fafc;
   font-weight: 800;
 }
 
