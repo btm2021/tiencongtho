@@ -1,85 +1,287 @@
 <!doctype html>
-<html lang="vi">
+<html lang="vi" data-theme="dark" data-bs-theme="dark">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Tính tiền công thợ</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no" />
+    <title>Sổ Tính Tiền Công Thợ - Tiện Lợi & Tốc Độ</title>
+    <!-- Bootstrap 5 CSS -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/css/bootstrap.min.css" rel="stylesheet" />
+    <!-- Bootstrap Icons -->
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css" rel="stylesheet" />
+    <!-- Google Fonts -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700;800&display=swap" rel="stylesheet" />
     <link rel="stylesheet" href="styles.css" />
   </head>
-  <body>
-    <main class="app">
-      <section class="topbar">
-        <div>
-          <p class="label">Sổ công thợ</p>
-          <h1>Tính tiền công</h1>
+  <body class="d-flex flex-column overflow-hidden">
+    
+    <!-- NAVBAR WITH HAMBURGER & GLOBAL TOTAL -->
+    <nav class="navbar navbar-expand navbar-dark bg-royal-blue shadow-sm sticky-top">
+      <div class="container-fluid px-3">
+        <!-- Hamburger Menu Button -->
+        <button class="btn btn-outline-light border-0 me-2 p-1" type="button" data-bs-toggle="offcanvas" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-label="Mở menu quản lý">
+          <i class="bi bi-list fs-3"></i>
+        </button>
+        
+        <span class="navbar-brand d-flex align-items-center gap-2 fw-bold text-uppercase fs-6 tracking-wider mb-0 me-auto">
+          <i class="bi bi-journal-check"></i> Sổ Công Thợ
+        </span>
+        
+        <!-- Live Global Total display on Nav -->
+        <div class="d-flex align-items-center text-white pe-1">
+          <span class="fs-xs text-white-50 text-uppercase tracking-wider me-2 d-none d-sm-inline">Tổng quỹ công:</span>
+          <strong id="navTotalSalary" class="fs-5 text-warning fw-extrabold">0đ</strong>
         </div>
-        <div class="date-field">
-          <label for="workDate">Ngày</label>
-          <input id="workDate" type="date" />
+      </div>
+    </nav>
+
+    <!-- SIDEBAR MENU (OFFCANVAS) WITH INTEGRATED MONTHLY CALENDAR -->
+    <div class="offcanvas offcanvas-start shadow" tabindex="-1" id="sidebarMenu" aria-labelledby="sidebarMenuLabel">
+      <div class="offcanvas-header bg-royal-blue text-white py-2 px-3">
+        <h5 class="offcanvas-title fw-bold fs-6 tracking-wider text-uppercase d-flex align-items-center gap-1.5" id="sidebarMenuLabel">
+          <i class="bi bi-calendar-range"></i> Tổng Quan & Lịch Sổ
+        </h5>
+        <button type="button" class="btn-close btn-close-white" data-bs-dismiss="offcanvas" aria-label="Đóng"></button>
+      </div>
+      <div class="offcanvas-body p-0 d-flex flex-column">
+        
+        <!-- SIDEBAR STATIC ACTIONS -->
+        <div class="p-3 border-bottom border-panel-dark bg-panel-dark">
+          <!-- NAVIGATION SHORTCUTS -->
+          <div class="d-flex gap-2 mb-2">
+            <button id="sidebarTodayShortcut" class="btn btn-outline-primary btn-sm flex-fill py-1.5 fw-bold d-flex align-items-center justify-content-center gap-1 fs-8" data-bs-dismiss="offcanvas">
+              <i class="bi bi-calendar-check"></i> Về hôm nay
+            </button>
+            <button id="sidebarClearAllShortcut" class="btn btn-outline-danger btn-sm flex-fill py-1.5 fw-bold d-flex align-items-center justify-content-center gap-1 fs-8">
+              <i class="bi bi-trash3"></i> Xóa sổ công
+            </button>
+          </div>
+          <!-- WEEKLY CALCULATOR BUTTON -->
+          <button id="sidebarWeeklyBtn" class="btn btn-warning btn-sm w-100 py-1.5 fw-bold d-flex align-items-center justify-content-center gap-1 fs-8" data-bs-toggle="modal" data-bs-target="#weeklyModal">
+            <i class="bi bi-calendar-range"></i> Tính công tuần này (T2 - T7)
+          </button>
+        </div>
+
+        <!-- INTEGRATED MONTHLY CALENDAR GRID -->
+        <div class="flex-grow-1 overflow-y-auto">
+          <!-- Calendar Title & Switcher -->
+          <div class="px-3 py-2 bg-panel-dark border-bottom border-panel-dark d-flex align-items-center justify-content-between">
+            <div class="d-flex align-items-center gap-1.5">
+              <i class="bi bi-calendar-month text-primary fs-7"></i>
+              <span id="calendarMonthTitle" class="fw-bold fs-8 text-uppercase tracking-wider">Tháng -- / ----</span>
+            </div>
+          </div>
+
+          <!-- Weekdays Row -->
+          <div class="calendar-weekdays-row d-flex text-center py-2 border-bottom border-panel-dark fs-xs fw-bold text-secondary bg-panel-dark">
+            <div class="flex-fill">CN</div>
+            <div class="flex-fill">T2</div>
+            <div class="flex-fill">T3</div>
+            <div class="flex-fill">T4</div>
+            <div class="flex-fill">T5</div>
+            <div class="flex-fill">T6</div>
+            <div class="flex-fill">T7</div>
+          </div>
+
+          <!-- Calendar Days Grid Container -->
+          <div id="calendarGrid" class="calendar-grid p-2">
+            <!-- Dynamic days render here as a 7-column grid -->
+          </div>
+
+          <div id="calendarEmptyState" class="text-center py-5 px-3 text-muted" style="display:none;">
+            <div class="fs-1 mb-2 text-black-50">
+              <i class="bi bi-calendar-x"></i>
+            </div>
+            <p class="mb-1 fw-bold fs-8">Lỗi tải lịch</p>
+          </div>
+        </div>
+
+        <!-- FOOTER SUMMARY IN SIDEBAR -->
+        <div class="p-3 bg-panel-dark border-top border-panel-dark">
+          <div class="row text-center fs-8">
+            <div class="col border-end border-light-subtle">
+              <span class="text-secondary d-block mb-0.5">Tổng công Chính</span>
+              <strong id="globalTotalMain" class="text-primary fs-7 fw-extrabold">0 công</strong>
+            </div>
+            <div class="col">
+              <span class="text-secondary d-block mb-0.5">Tổng công Phụ</span>
+              <strong id="globalTotalHelper" class="text-success fs-7 fw-extrabold">0 công</strong>
+            </div>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- MAIN APP VIEW (SINGLE SHEET WIDGET - SCALED FOR FULL-HEIGHT MOBILE) -->
+    <div class="container px-3 pb-3 pt-0 max-width-600 app-container-wrapper">
+      
+      <!-- UNIFIED ACTIVE DAY SHEET CARD -->
+      <section class="flex-grow-1 d-flex flex-column h-100">
+        <div class="card border-0 shadow-sm p-3 main-sheet flex-grow-1 d-flex flex-column justify-content-between">
+          
+          <!-- DATE SELECTOR HEADER -->
+          <div class="d-flex align-items-center justify-content-between gap-1.5">
+            <button id="prevDateBtn" class="btn btn-light-blue p-2" type="button" aria-label="Ngày trước đó">
+              <i class="bi bi-chevron-left fs-6 fw-bold"></i>
+            </button>
+            
+            <div class="flex-grow-1 position-relative d-flex align-items-center bg-panel-dark border border-panel-dark px-2 min-height-48">
+              <i class="bi bi-calendar3 text-muted me-1.5 fs-7"></i>
+              <input id="workDate" type="date" class="form-control border-0 bg-transparent p-0 fw-bold fs-6 text-center" />
+            </div>
+
+            <button id="nextDateBtn" class="btn btn-light-blue p-2" type="button" aria-label="Ngày tiếp theo">
+              <i class="bi bi-chevron-right fs-6 fw-bold"></i>
+            </button>
+          </div>
+
+          <!-- CHẤM CÔNG HÀNG NGÀY HEADER -->
+          <div class="d-flex flex-column gap-2">
+            <h6 class="fw-extrabold mb-0 fs-7 d-flex align-items-center gap-1.5 border-bottom border-panel-dark pb-2">
+              <i class="bi bi-clock-history text-primary"></i> Chấm công theo buổi
+            </h6>
+          </div>
+
+          <!-- BUỔI SÁNG -->
+          <div class="d-flex flex-column gap-2">
+            <div class="d-flex align-items-center gap-1.5">
+              <i class="bi bi-sun-fill text-warning fs-6"></i>
+              <span class="fw-bold fs-7">Buổi Sáng</span>
+            </div>
+            
+            <!-- Sáng: Thợ chính -->
+            <div class="d-flex align-items-center justify-content-between py-1.5 border-bottom border-panel-dark counter-row">
+              <span class="fw-bold fs-7">Thợ chính</span>
+              <div class="counter-capsule d-flex align-items-center bg-panel-dark border border-panel-dark p-0.5">
+                <button id="decMorningMain" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <span id="morningMainDisplay" class="counter-value fw-extrabold fs-7">0</span>
+                <button id="incMorningMain" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Sáng: Thợ phụ -->
+            <div class="d-flex align-items-center justify-content-between py-1.5 border-bottom border-panel-dark counter-row">
+              <span class="fw-bold fs-7">Thợ phụ</span>
+              <div class="counter-capsule d-flex align-items-center bg-panel-dark border border-panel-dark p-0.5">
+                <button id="decMorningHelper" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <span id="morningHelperDisplay" class="counter-value fw-extrabold fs-7">0</span>
+                <button id="incMorningHelper" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BUỔI CHIỀU -->
+          <div class="d-flex flex-column gap-2">
+            <div class="d-flex align-items-center gap-1.5">
+              <i class="bi bi-sunset-fill text-royal fs-6"></i>
+              <span class="fw-bold fs-7">Buổi Chiều</span>
+            </div>
+            
+            <!-- Chiều: Thợ chính -->
+            <div class="d-flex align-items-center justify-content-between py-1.5 border-bottom border-panel-dark counter-row">
+              <span class="fw-bold fs-7">Thợ chính</span>
+              <div class="counter-capsule d-flex align-items-center bg-panel-dark border border-panel-dark p-0.5">
+                <button id="decAfternoonMain" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <span id="afternoonMainDisplay" class="counter-value fw-extrabold fs-7">0</span>
+                <button id="incAfternoonMain" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+              </div>
+            </div>
+            
+            <!-- Chiều: Thợ phụ -->
+            <div class="d-flex align-items-center justify-content-between py-1.5 border-bottom border-panel-dark counter-row">
+              <span class="fw-bold fs-7">Thợ phụ</span>
+              <div class="counter-capsule d-flex align-items-center bg-panel-dark border border-panel-dark p-0.5">
+                <button id="decAfternoonHelper" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-dash-lg"></i>
+                </button>
+                <span id="afternoonHelperDisplay" class="counter-value fw-extrabold fs-7">0</span>
+                <button id="incAfternoonHelper" class="btn btn-counter-btn border-0 btn-counter-small d-flex align-items-center justify-content-center p-0" type="button">
+                  <i class="bi bi-plus-lg"></i>
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <!-- BOTTOM BLOCK: TOTALS & ACTIONS -->
+          <div class="pt-3 border-top border-panel-dark">
+            <div class="d-flex justify-content-between align-items-center mb-3">
+              <span class="fw-bold text-secondary fs-7">Tổng tiền ngày này:</span>
+              <strong id="dayTotal" class="text-royal fs-3 fw-extrabold">0đ</strong>
+            </div>
+
+            <div class="d-grid gap-2">
+              <button id="saveDayBtn" class="btn btn-primary btn-lg py-2 fw-bold d-flex align-items-center justify-content-center gap-2 fs-6 shadow-sm" type="button">
+                <i class="bi bi-check2-circle fs-5"></i> Lưu Công Ngày Này
+              </button>
+              <button id="clearDayBtn" class="btn btn-outline-secondary btn-sm border-0 py-1.5 fw-semibold text-secondary fs-8" type="button">
+                <i class="bi bi-trash3"></i> Xóa ngày này
+              </button>
+            </div>
+          </div>
+
         </div>
       </section>
 
-      <section class="summary" aria-live="polite">
-        <div>
-          <span>Tổng tiền</span>
-          <strong id="grandTotal">0đ</strong>
+    </div>
+
+    <!-- WEEKLY CALCULATION MODAL -->
+    <div class="modal fade" id="weeklyModal" tabindex="-1" aria-labelledby="weeklyModalLabel" aria-hidden="true">
+      <div class="modal-dialog modal-dialog-centered">
+        <div class="modal-content bg-panel-dark border border-panel-dark text-light">
+          <div class="modal-header border-bottom border-panel-dark px-3 py-2.5">
+            <h6 class="modal-title fw-extrabold text-uppercase tracking-wider" id="weeklyModalLabel">
+              <i class="bi bi-calculator text-primary"></i> Chi tiết công tuần này
+            </h6>
+            <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Đóng"></button>
+          </div>
+          <div class="modal-body p-3">
+            <!-- Dynamic week days list will go here -->
+            <div id="weeklyModalList" class="d-flex flex-column gap-2 mb-3">
+              <!-- Rendered dynamically in JS -->
+            </div>
+            
+            <!-- Summary card in modal -->
+            <div class="p-3 bg-panel-dark border border-panel-dark">
+              <div class="row text-center fs-8 mb-2">
+                <div class="col border-end border-panel-dark">
+                  <span class="text-secondary d-block mb-0.5">Tổng Chính tuần</span>
+                  <strong id="weeklyTotalMain" class="text-primary fs-7 fw-extrabold">0 công</strong>
+                </div>
+                <div class="col">
+                  <span class="text-secondary d-block mb-0.5">Tổng Phụ tuần</span>
+                  <strong id="weeklyTotalHelper" class="text-success fs-7 fw-extrabold">0 công</strong>
+                </div>
+              </div>
+              <div class="d-flex justify-content-between align-items-center pt-2 border-top border-panel-dark">
+                <span class="fw-bold text-secondary fs-8">TỔNG LƯƠNG TUẦN:</span>
+                <strong id="weeklyGrandTotal" class="text-warning fs-5 fw-extrabold">0đ</strong>
+              </div>
+            </div>
+          </div>
+          <div class="modal-footer border-top border-panel-dark p-2">
+            <button type="button" class="btn btn-outline-secondary btn-sm border-0 py-1.5 fw-semibold text-secondary w-100 fs-8" data-bs-dismiss="modal">Đóng</button>
+          </div>
         </div>
-        <div>
-          <span>Thợ chính</span>
-          <strong id="mainTotal">0đ</strong>
-        </div>
-        <div>
-          <span>Thợ phụ</span>
-          <strong id="helperTotal">0đ</strong>
-        </div>
-      </section>
+      </div>
+    </div>
 
-      <section class="entry-panel" aria-labelledby="entryTitle">
-        <div class="section-heading">
-          <h2 id="entryTitle">Thêm thợ</h2>
-          <button id="clearDayBtn" type="button" class="ghost-button">Xóa ngày này</button>
-        </div>
-
-        <form id="workerForm" class="worker-form">
-          <label>
-            Tên thợ
-            <input id="workerName" type="text" placeholder="Ví dụ: Anh Nam" autocomplete="off" required />
-          </label>
-
-          <label>
-            Loại thợ
-            <select id="workerType">
-              <option value="main">Thợ chính - 420k/ngày</option>
-              <option value="helper">Thợ phụ - 340k/ngày</option>
-            </select>
-          </label>
-
-          <fieldset class="sessions">
-            <legend>Buổi làm</legend>
-            <label>
-              <input id="morning" type="checkbox" checked />
-              Sáng
-            </label>
-            <label>
-              <input id="afternoon" type="checkbox" checked />
-              Chiều
-            </label>
-          </fieldset>
-
-          <button type="submit" class="primary-button">Thêm vào ngày</button>
-        </form>
-      </section>
-
-      <section class="list-panel" aria-labelledby="listTitle">
-        <div class="section-heading">
-          <h2 id="listTitle">Danh sách trong ngày</h2>
-          <span id="workerCount" class="count">0 thợ</span>
-        </div>
-        <div id="workerList" class="worker-list"></div>
-        <p id="emptyState" class="empty-state">Chưa có công thợ cho ngày này.</p>
-      </section>
-    </main>
-
+    <!-- Bootstrap Bundle with Popper JS -->
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.3/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Standard Main script -->
     <script src="app.js"></script>
   </body>
 </html>
